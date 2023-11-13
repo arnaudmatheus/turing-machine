@@ -25,6 +25,12 @@ class TuringMachine {
                 MoveDirection.LEFT -> moveLeft()
                 MoveDirection.RIGHT -> moveRight()
             }
+
+            print("\n Simbolo: $currentSymbol Estado atual: $currentState \n")
+            print(
+                "Transição: $currentSymbol -> ${transition.writeSymbol}, ${transition.moveDirection}, " +
+                        "${transition.nextState.name} | "
+            )
             currentState = transition.nextState.name
             if (currentState == "q_accept") {
                 return true
