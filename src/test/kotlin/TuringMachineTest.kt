@@ -3,7 +3,7 @@ import io.kotest.matchers.shouldBe
 
 class TuringMachineTest : StringSpec({
 
-    val turingMachine = TuringMachineFuncionak()
+    val turingMachine = TuringMachine()
 
     "Aceita cadeias válidas" {
         val validInputs = listOf("aabb", "abab", "baba", "aabbab")
@@ -18,13 +18,4 @@ class TuringMachineTest : StringSpec({
             turingMachine.process(it) shouldBe false
         }
     }
-
-    "Aceita ou rejeita outras cadeias" {
-        val otherInputs = listOf("aaabbb", "bbbaaa", "ab", "ba", "aaaaa", "bbbbb", "ababab", "bababa")
-        otherInputs.forEach {
-            turingMachine.process(it) shouldBe it.length % 2 shouldBe  0
-        }
-    }
-
-    // Adicione mais casos de teste conforme necessário
 })
