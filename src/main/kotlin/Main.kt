@@ -1,11 +1,12 @@
 class  TuringMachineFuncionak {
 
     private var tape: MutableList<Char> = mutableListOf()
-    private var headPosition: Int = 0
+    private var headPosition: Int = 1
     private var currentState: String = "q0"
 
     fun process(input: String): Boolean {
         // Limpa a fita e inicia com dois espaços em branco
+        tape.add(' ')
         tape.addAll(input.toList())
 
         while (true) {
@@ -20,19 +21,37 @@ class  TuringMachineFuncionak {
                             currentState = "q1"
                         }
                         'b' -> {
-                            tape[headPosition] = 'Y'
+                            tape[headPosition] = 'X'
                             moveRight()
-                            currentState = "q2"
+                            currentState = "q3"
                         }
-                        ' ' -> return true // Aceitação imediata se a entrada estiver vazia
+                        'X' -> {
+                            tape[headPosition] = 'X'
+                            moveLeft()
+                            currentState = "q0"
+                        }
+                        ' ' ->{
+                            tape[headPosition] = ' '
+                            moveRight()
+                            currentState = "q5"
+                        } // Aceitação imediata se a entrada estiver vazia
                         else -> return false // Rejeita se o primeiro símbolo não for 'a' ou 'b'
                     }
                 }
                 "q1" -> {
                     when (currentSymbol) {
-                        'a' -> moveRight()
-                        'b' -> {
-                            tape[headPosition] = 'Y'
+                        'a' -> {
+                            tape[headPosition] = 'a'
+                            moveRight()
+                            currentState = "q1"
+                        }
+                        'X' -> {
+                            tape[headPosition] = 'X'
+                            moveRight()
+                            currentState = "q1"
+                        }
+                        'b'->{
+                            tape[headPosition] = 'X'
                             moveRight()
                             currentState = "q2"
                         }
@@ -43,59 +62,88 @@ class  TuringMachineFuncionak {
                 "q2" -> {
                     when (currentSymbol) {
                         'a' -> {
-                            tape[headPosition] = 'X'
-                            moveRight()
-                            currentState = "q3"
+                            tape[headPosition] = 'a'
+                            moveLeft()
+                            currentState = "q2"
                         }
-                        'b' -> moveRight()
-                        ' ' -> currentState = "q_reject"
+                        'b' -> {
+                            tape[headPosition] = 'b'
+                            moveLeft()
+                            currentState = "q2"
+                        }
+                        'X' -> {
+                            tape[headPosition] = 'X'
+                            moveLeft()
+                            currentState = "q0"
+                        }
+                        ' ' -> {
+                            tape[headPosition] = ' '
+                            moveLeft()
+                            currentState = "q4"
+                        }
                         else -> return false // Rejeita para outros símbolos em q2
                     }
                 }
                 "q3" -> {
                     when (currentSymbol) {
-                        'a' -> moveRight()
-                        'b' -> {
-                            tape[headPosition] = 'Y'
+                        'a' -> {
+                            tape[headPosition] = 'X'
                             moveRight()
-                            currentState = "q4"
+                            currentState = "q2"
                         }
-                        ' ' -> currentState = "q_reject"
+                        'b' -> {
+                            tape[headPosition] = 'b'
+                            moveRight()
+                            currentState = "q3"
+                        }
+                        'X' ->{
+                            tape[headPosition] = 'X'
+                            moveRight()
+                            currentState = "q3"
+                        }
+                        ' ' -> {
+                            currentState = "q2"
+                        }
                         else -> return false // Rejeita para outros símbolos em q3
                     }
                 }
                 "q4" -> {
                     when (currentSymbol) {
-                        'a' -> {
+                        'X' -> {
+                            tape[headPosition] = 'X'
+                            moveLeft()
+                            currentState = "q4"
+                        }
+                        ' ' -> {
+                            tape[headPosition] = ' '
+                            moveRight()
+                            currentState = "q_accept"
+                        }
+                        else -> return false // Rejeita para outros símbolos em q4
+                    }
+                }
+
+                "q5" -> {
+                    when (currentSymbol) {
+                        'X' -> {
                             tape[headPosition] = 'X'
                             moveRight()
                             currentState = "q5"
                         }
-                        'b' -> moveRight()
-                        ' ' -> currentState = "q_reject"
+                        'a' -> {
+                            tape[headPosition] = 'X'
+                            moveRight()
+                            currentState = "q1"
+                        }
+                        'b' -> {
+                            tape[headPosition] = 'X'
+                            moveRight()
+                            currentState = "q3"
+                        }
                         else -> return false // Rejeita para outros símbolos em q4
                     }
                 }
-                "q5" -> {
-                    when (currentSymbol) {
-                        'a' -> moveRight()
-                        'b' -> {
-                            tape[headPosition] = 'Y'
-                            moveRight()
-                            currentState = "q6"
-                        }
-                        ' ' -> currentState = "q_accept"
-                        else -> return false // Rejeita para outros símbolos em q5
-                    }
-                }
-                "q6" -> {
-                    when (currentSymbol) {
-                        'a' -> moveRight()
-                        'b' -> moveRight()
-                        ' ' -> currentState = "q_accept"
-                        else -> return false // Rejeita para outros símbolos em q6
-                    }
-                }
+
                 "q_accept" -> {
                     return currentSymbol == ' ' // Aceita imediatamente se encontrar espaço em branco
                 }
@@ -122,7 +170,7 @@ class  TuringMachineFuncionak {
 
 fun main() {
     val turingMachine = TuringMachineFuncionak()
-    val input = "aabb"
+    val input = "abab"
     val accepted = turingMachine.process(input)
     if (accepted) {
         println("A cadeia '$input' foi aceita.")
