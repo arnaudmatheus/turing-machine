@@ -37,7 +37,7 @@ class LanguageStatesBuilder {
         states[3].addTransition('a', 'X', MoveDirection.RIGHT, states[2])
         states[3].addTransition('b', 'b', MoveDirection.RIGHT, states[3])
         states[3].addTransition('X', 'X', MoveDirection.RIGHT, states[3])
-        states[3].addTransition(' ', ' ', MoveDirection.RIGHT, states[2])
+        states[3].addTransition(' ', ' ', MoveDirection.RIGHT, states[7])
         states[4].addTransition('X', 'X', MoveDirection.LEFT, states[4])
         states[4].addTransition(' ', ' ', MoveDirection.RIGHT, states[6])
         states[5].addTransition('X', 'X', MoveDirection.RIGHT, states[5])
